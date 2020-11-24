@@ -24,11 +24,12 @@ It takes arbitrary strings as input, as well as all keyword arguments from
 
 ```python
 from docker_composer import DockerCompose
+
+
 base = DockerCompose(file="docker-compose.yml", verbose=True)
-
 base.run(detach=True, workdir="/tmp").call("app")
-
 base.run(workdir="/tmp").call("app", "/bin/bash", "-l")
+
 # /tmp $ ls /.dockerenv
 # /.dockerenv
 # /tmp $ exit
@@ -52,3 +53,4 @@ print(process.stdout.encode("UTF-8"))
 | **Packaging**  | `poetry` |                                 |
 | **Tests**      | `pytest` |                                 |
 | **Typing**     | `mypy`   | Type all methods                |
+| **Imports**    | `isort`  |                                 |
