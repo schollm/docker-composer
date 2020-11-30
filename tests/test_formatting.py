@@ -15,11 +15,11 @@ def base_dir(request):
 
 @pytest.mark.parametrize("dir_name", ("src", "tests"))
 def test_black(base_dir: Path, dir_name: str):
-    proc = run(("black", "--check", base_dir / dir_name))
+    proc = run(("black", "--check", str(base_dir / dir_name)))
     assert proc.returncode == 0, ("black is not happy with", dir_name)
 
 
 @pytest.mark.parametrize("dir_name", ("src", "tests"))
 def test_isort(base_dir: str, dir_name: str):
-    proc = run(("isort", "--diff", "--check", base_dir / dir_name))
+    proc = run(("isort", "--diff", "--check", str(base_dir / dir_name)))
     assert proc.returncode == 0
