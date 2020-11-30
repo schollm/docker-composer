@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docker-composer"
-version = "0.8.3"
+version = "0.8.4"
 description = "Use docker-compose from within Python"
 authors = ["Micha <schollm-git@gmx.com>"]
 readme = "README.md"
@@ -49,5 +49,3 @@ known_pytest = ['pytest']
 multi_line_output = 3
 line_length = 88
 include_trailing_comma = 'True'
-
-
