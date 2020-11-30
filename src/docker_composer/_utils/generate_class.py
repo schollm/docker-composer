@@ -91,7 +91,8 @@ def get_docstring(sections: Mapping[str, List[str]]) -> List[str]:
     :param sections: Output from `collect_help_lines`
     """
     lines = sections["general"]
-    if usages := sections.get("usage", []):
+    usages = sections.get("usage", [])
+    if usages:
         lines += ["Usage:"] + usages
     return lines
 
@@ -106,7 +107,8 @@ def get_def_commands(
     sections: Mapping[str, List[str]], level: int = 0
 ) -> Iterator[Tuple[str, List[str]]]:
     """Generate command functions as string"""
-    if not (commands := sections.get("commands", None)):
+    commands = sections.get("commands", None)
+    if not commands:
         return
     for line in commands:
         if not line.strip():

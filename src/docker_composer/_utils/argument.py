@@ -91,7 +91,8 @@ def parse_dc_argument(lines: List[str]) -> List[Argument]:
 
 
 def _get_type(type_name) -> Type:
-    if (res := _TYPE_CONVERSIONS.get(type_name, None)) is None:
+    res = _TYPE_CONVERSIONS.get(type_name, None)
+    if res is None:
         if "=" in type_name:
             res = dict
         else:
