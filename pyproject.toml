@@ -23,7 +23,7 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 attrs = "^20.3.0"
 loguru = "^0.5.3"
 
