@@ -56,7 +56,6 @@ class DockerBaseRunner:
         stdin=None,
         stdout=None,
         stderr=None,
-        capture_output=False,
         **kwargs,
     ) -> subprocess.CompletedProcess:
         """Call docker-compose with the generated command
@@ -76,7 +75,6 @@ class DockerBaseRunner:
             stdin=stdin,
             stdout=stdout,
             stderr=stderr,
-            capture_output=capture_output,
             **kwargs,
         )
         logger.debug("Returned from {}: {}", cmd[0], p.returncode)
