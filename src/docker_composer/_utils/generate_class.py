@@ -1,10 +1,9 @@
-import os
 import subprocess
 from collections import defaultdict
 from functools import lru_cache, reduce
 from operator import add
 from pathlib import Path
-from typing import Iterable, Iterator, List, Mapping, Optional, Set, Tuple, Union
+from typing import Iterable, Iterator, List, Mapping, Set, Tuple, Union
 
 import black
 import isort
@@ -38,8 +37,10 @@ def get_help_message(subcommand: str = "") -> str:
     args = [arg for arg in ["docker-compose", subcommand, "--help"] if arg]
     process = subprocess.run(args, capture_output=True, text=True)
     if process.returncode:
-        logger.error(process.returncode)
+        logger.error("docker-compose {} --help exited with {}:", subcommand, process.returncode)
         logger.error(process.stderr)
+        breakpoint()
+
     return process.stdout
 
 
@@ -51,7 +52,9 @@ def collect_help_lines(msg: str) -> Mapping[str, List[str]]:
     parts: Mapping[str, List[str]] = defaultdict(list)
     part = "general"
     for line in msg.split("\n"):
-        if line and line[0] != " " and line.endswith(":") and " " not in line:
+        if not line:
+            part = "general"
+        elif " " not in line and line.endswith(":"):
             part = line[:-1].lower()
         else:
             parts[part].append(line)
@@ -181,7 +184,7 @@ class {class_name}(DockerBaseRunner):
         level=level,
     )
     try:
-        res = isort.code(res, config=isort.Config(settings_path=project_root()))
+        res = isort.code(res, config=isort.Config(settings_path=project_root().as_posix()))
     except ISortError as exc:
         logger.exception(exc)
     try:
@@ -191,7 +194,7 @@ class {class_name}(DockerBaseRunner):
         return res
 
 
-def write_class(cmd: str, file_name: Optional[str] = None) -> None:
+def write_class(cmd: str) -> None:
     """
     Generate a class for `cmd` and write it to `file_name`
 
@@ -199,18 +202,15 @@ def write_class(cmd: str, file_name: Optional[str] = None) -> None:
     :param file_name: Name of output file (empty/None for auto-generation)
     :return:
     """
-    if not file_name:
-        file_name = os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "runner",
-            "cmd" if cmd else "",
-            f"{cmd or 'root'}.py",
-        )
+    base_path = Path(__file__).parents[1] / "runner"
+    if cmd:
+        file_name = base_path / "cmd" / f"{cmd}.py"
+    else:
+        file_name = base_path / "root.py"
+
     class_str = generate_class(f"DockerCompose{(cmd or 'root').capitalize()}", cmd)
-    logger.info("Write {:<8s} -> {}", cmd or "root", file_name)
-    with open(file_name, "w") as f:
-        f.write(class_str)
+    logger.info("Write {:<8s} -> {}", cmd, file_name)
+    file_name.write_text(class_str, encoding="utf-8")
 
 
 def main() -> None:
