@@ -29,6 +29,9 @@ _TYPE_CONVERSIONS = {
     "int": int,
     "list": list,
     "str": str,
+    "stringArray": list[str],
+    "volumes": list[str],
+    "docker": bool,
 }
 
 
