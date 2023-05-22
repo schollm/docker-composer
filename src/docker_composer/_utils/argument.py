@@ -75,7 +75,6 @@ def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:
     """Combine argument lines to obtain one line per argument"""
     res = ""
     for arg in arguments:
-        logger.info(arg)
         if res and arg[:12].strip().startswith("-"):
             yield res.strip()
             res = ""
