@@ -37,7 +37,9 @@ def get_help_message(subcommand: str = "") -> str:
     args = [arg for arg in ["docker-compose", subcommand, "--help"] if arg]
     process = subprocess.run(args, capture_output=True, text=True)
     if process.returncode:
-        logger.error("docker-compose {} --help exited with {}:", subcommand, process.returncode)
+        logger.error(
+            "docker-compose {} --help exited with {}:", subcommand, process.returncode
+        )
         logger.error(process.stderr)
 
     return process.stdout
@@ -183,7 +185,9 @@ class {class_name}(DockerBaseRunner):
         level=level,
     )
     try:
-        res = isort.code(res, config=isort.Config(settings_path=project_root().as_posix()))
+        res = isort.code(
+            res, config=isort.Config(settings_path=project_root().as_posix())
+        )
     except ISortError as exc:
         logger.exception(exc)
     try:
