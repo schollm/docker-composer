@@ -9,17 +9,22 @@ from docker_composer.base import DockerBaseRunner
 
 
 @attr.s(auto_attribs=True)
-class DockerComposeImages(DockerBaseRunner):
+class DockerComposeLs(DockerBaseRunner):
     """
-    Usage:  docker compose images [OPTIONS] [SERVICE...]
-    List images used by the created containers
+    Usage:  docker compose ls [OPTIONS]
+    List running compose projects
     """
 
+    all: Optional[bool] = None
+    """Show all stopped Compose projects"""
+    filter: Optional[str] = None
+    """Filter output based on conditions provided."""
     format: Optional[str] = None
     """Format the output. Values: [table | json]. (default "table")"""
     quiet: Optional[bool] = None
-    """Only display IDs"""
-    _cmd: str = "images"
+    """Only display IDs."""
+    _cmd: str = "ls"
     _options: List[str] = [
+        "all",
         "quiet",
     ]
