@@ -66,3 +66,18 @@ class TestParseHelpLinesIgnoreRunHelpMsg():
 
     def test_run_docker_help_in_general(self, res):
         assert "Run 'docker" in '\n'.join(res["general"])
+
+
+def test_options():
+    res = collect_help_lines(dedent("""
+    Usage:  docker compose version [OPTIONS]
+
+    Show the Docker Compose version information
+
+    Options:
+      -f, --format string   Format the output. Values: [pretty | json]. (Default: pretty)
+          --short           Shows only Compose's version number.
+      """))
+    assert set(res.keys()) == {"general", "options"}
+    assert res["options"] == ["  -f, --format string   Format the output. Values: [pretty | json]. (Default: pretty)",
+                                "      --short           Shows only Compose's version number."]
