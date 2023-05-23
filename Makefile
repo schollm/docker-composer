@@ -6,5 +6,8 @@ format:
 	black .
 	isort .
 
+publish:
+	poetry build
+	poetry publish
 generate:
 	poetry run python src/docker_composer/_utils/generate_class.py
