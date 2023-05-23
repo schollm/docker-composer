@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docker-composer"
-version = "2.17.3"
+version = "2.17.4"
 description = "Use docker-compose (V2) from within Python"
 authors = ["Micha <schollm-git@gmx.com>"]
 readme = "README.md"
