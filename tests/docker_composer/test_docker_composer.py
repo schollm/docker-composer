@@ -7,15 +7,15 @@ from docker_composer import DockerCompose
     "root_args, expected",
     [
         (dict(), []),
-        (dict(verbose=True), ["--verbose"]),
-        (dict(verbose=False), []),
+        (dict(compatibility=True), ["--compatibility"]),
+        (dict(compatibility=False), []),
         (dict(file="file.yml"), ["--file", "file.yml"]),
         (
-            dict(verbose=True, file="docker-compose.yml"),
+            dict(compatibility=True, file="docker-compose.yml"),
             [
+                "--compatibility",
                 "--file",
                 "docker-compose.yml",
-                "--verbose",
             ],
         ),
     ],
@@ -29,12 +29,14 @@ def test_root__call_cmd(root_args, expected):
     "cmd_args, expected_cmd",
     [
         (dict(), []),
-        (dict(compress=False), []),
-        (dict(compress=True), ["--compress"]),
+        (dict(pull=False), []),
+        (dict(pull=True), ["--pull"]),
         (dict(build_arg="Foo"), ["--build-arg", "Foo"]),
-        (dict(build_arg="Foo", force_rm=True), ["--build-arg", "Foo", "--force-rm"]),
+        (dict(build_arg="Foo", pull=True), ["--build-arg", "Foo", "--pull"]),
     ],
 )
 def test_build__call_cmd(cmd_args, expected_cmd):
-    res = DockerCompose(verbose=True).build(**cmd_args)._call_cmd(["bar"])
-    assert res == ["docker-compose", "--verbose", "build"] + expected_cmd + ["bar"]
+    res = DockerCompose(compatibility=True).build(**cmd_args)._call_cmd(["bar"])
+    assert res == ["docker-compose", "--compatibility", "build"] + expected_cmd + [
+        "bar"
+    ]
