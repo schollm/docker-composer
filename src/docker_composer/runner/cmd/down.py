@@ -21,9 +21,10 @@ class DockerComposeDown(DockerBaseRunner):
     """Remove images used by services. "local" remove only images that don't have a custom tag ("local"|"all")"""
     timeout: Optional[int] = None
     """Specify a shutdown timeout in seconds (default 10)"""
-    volumes: Optional[list] = None
-    """Remove named volumes declared in the volumes section of the Compose file and anonymous volumes attached to containers."""
+    volumes: Optional[bool] = None
+    """Remove named volumes declared in the "volumes" section of the Compose file and anonymous volumes attached to containers."""
     _cmd: str = "down"
     _options: List[str] = [
         "remove_orphans",
+        "volumes",
     ]
