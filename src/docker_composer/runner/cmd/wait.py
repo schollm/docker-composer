@@ -9,20 +9,18 @@ from docker_composer.base import DockerBaseRunner
 
 
 @attr.s(auto_attribs=True)
-class DockerComposeKill(DockerBaseRunner):
+class DockerComposeWait(DockerBaseRunner):
     """
-    Usage:  docker compose kill [OPTIONS] [SERVICE...]
-    Force stop service containers
+    Usage:  docker compose wait SERVICE [SERVICE...] [OPTIONS]
+    Block until containers of all (or specified) services stop.
     """
 
+    down_project: Optional[bool] = None
+    """Drops project when the first container stops"""
     dry_run: Optional[bool] = None
     """Execute command in dry run mode"""
-    remove_orphans: Optional[bool] = None
-    """Remove containers for services not defined in the Compose file"""
-    signal: Optional[str] = None
-    """SIGNAL to send to the container (default "SIGKILL")"""
-    _cmd: str = "kill"
+    _cmd: str = "wait"
     _options: List[str] = [
+        "down_project",
         "dry_run",
-        "remove_orphans",
     ]
