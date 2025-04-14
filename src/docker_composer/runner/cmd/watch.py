@@ -9,20 +9,24 @@ from docker_composer.base import DockerBaseRunner
 
 
 @attr.s(auto_attribs=True)
-class DockerComposeImages(DockerBaseRunner):
+class DockerComposeWatch(DockerBaseRunner):
     """
-    Usage:  docker compose images [OPTIONS] [SERVICE...]
-    List images used by the created containers
+    Usage:  docker compose watch [SERVICE...]
+    Watch build context for service and rebuild/refresh containers when files are updated
     """
 
     dry_run: Optional[bool] = None
     """Execute command in dry run mode"""
-    format: Optional[str] = None
-    """Format the output. Values: [table | json] (default "table")"""
+    no_up: Optional[bool] = None
+    """Do not build & start services before watching"""
+    prune: Optional[bool] = None
+    """Prune dangling images on rebuild"""
     quiet: Optional[bool] = None
-    """Only display IDs"""
-    _cmd: str = "images"
+    """hide build output"""
+    _cmd: str = "watch"
     _options: List[str] = [
         "dry_run",
+        "no_up",
+        "prune",
         "quiet",
     ]

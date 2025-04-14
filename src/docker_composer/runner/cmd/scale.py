@@ -9,20 +9,18 @@ from docker_composer.base import DockerBaseRunner
 
 
 @attr.s(auto_attribs=True)
-class DockerComposeKill(DockerBaseRunner):
+class DockerComposeScale(DockerBaseRunner):
     """
-    Usage:  docker compose kill [OPTIONS] [SERVICE...]
-    Force stop service containers
+    Usage:  docker compose scale [SERVICE=REPLICAS...]
+    Scale services
     """
 
     dry_run: Optional[bool] = None
     """Execute command in dry run mode"""
-    remove_orphans: Optional[bool] = None
-    """Remove containers for services not defined in the Compose file"""
-    signal: Optional[str] = None
-    """SIGNAL to send to the container (default "SIGKILL")"""
-    _cmd: str = "kill"
+    no_deps: Optional[bool] = None
+    """Don't start linked services"""
+    _cmd: str = "scale"
     _options: List[str] = [
         "dry_run",
-        "remove_orphans",
+        "no_deps",
     ]
