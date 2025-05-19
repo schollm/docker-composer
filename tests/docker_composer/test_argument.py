@@ -49,6 +49,19 @@ def test_Argument_is_option(input, expect):
 
 
 @pytest.mark.parametrize(
+    "input_, expect",
+    [
+        (Argument("a", "x", int, ""), True),
+        (Argument("a", "xx", bool, "desc"), True),
+        (Argument("b", "x", int, ""), False),
+        (Argument("b", "xx", bool, "desc"), False),
+    ],
+)
+def test_Argument_eq(input_, expect):
+    assert (Argument("a", "x", int, "") == input_) == expect
+
+
+@pytest.mark.parametrize(
     "type_, expect",
     [
         ("INT", int),

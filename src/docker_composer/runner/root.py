@@ -69,11 +69,14 @@ class DockerComposeRoot(DockerBaseRunner):
        (default: the path of the, first specified, Compose file)"""
     project_name: Optional[str] = None
     """Project name"""
+    verbose: Optional[bool] = None
+    """Use verbose output"""
     _cmd: str = ""
     _options: List[str] = [
         "all_resources",
         "compatibility",
         "dry_run",
+        "verbose",
     ]
 
     def attach(

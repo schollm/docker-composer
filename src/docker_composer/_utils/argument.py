@@ -35,7 +35,7 @@ _TYPE_CONVERSIONS = {
 }
 
 
-@attr.s(auto_attribs=True, frozen=True)
+@attr.s(auto_attribs=True, frozen=True, eq=False)
 class Argument:
     arg: str
     type_desc: str
@@ -69,6 +69,14 @@ class Argument:
 
         type_ = _get_type(type_from_default if default_str else type_desc)
         return Argument(arg, type_desc, type_, desc, default_str)
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, type(self)):
+            return False
+        return self.arg == other.arg
+
+    def __hash__(self):
+        return hash(self.arg)
 
 
 def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:
