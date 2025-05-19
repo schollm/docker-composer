@@ -47,10 +47,10 @@ print(process.stdout.encode("UTF-8"))
 ### Coding Standards
 
 | **Type**       | Package  | Comment                         |
-| -------------- | -------- | ------------------------------- |
+| -------------- |----------| ------------------------------- |
 | **Linter**     | `black`  | Also for auto-formatted modules |
 | **Logging**    | `loguru` |                                 |
-| **Packaging**  | `poetry` |                                 |
+| **Packaging**  | `uv`     |                                 |
 | **Tests**      | `pytest` |                                 |
 | **Typing**     | `mypy`   | Type all methods                |
 | **Imports**    | `isort`  |                                 |
