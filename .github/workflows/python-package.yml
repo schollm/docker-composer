@@ -52,7 +52,7 @@ jobs:
       - name: Run pytest
         run: |
           echo ${{ github.ref }}
-          uv run --python ${{ matrix.python-version }} pytest src/
+          uv run --python ${{ matrix.python-version }} pytest tests/
       - name: Code Coverage Summary Report
         if: matrix.coverage==true
         uses: irongut/CodeCoverageSummary@v1.3.0
