@@ -151,6 +151,7 @@ def generate_class(class_name: str, cmd: str, level=0) -> str:
     docker_lines = get_help_message(cmd)
     nl = level + 4
     sections, arguments = parse_help(docker_lines)
+    _add_custom_arguments(cmd, arguments)
     cmd_fns = ""
     add_imports: Set[str] = set()
     if "commands" in sections:
@@ -214,9 +215,16 @@ def write_class(cmd: str) -> None:
     else:
         file_name = base_path / "root.py"
 
-    class_str = generate_class(f"DockerCompose{(cmd or 'root').capitalize()}", cmd)
+    class_str = generate_class(f"DockerCompose{(cmd or 'Root').capitalize()}", cmd)
     logger.info("Write {:<8s} -> {}", cmd, file_name)
     file_name.write_text(class_str, encoding="utf-8")
+
+
+def _add_custom_arguments(cmd: str, arguments: list[Argument]):
+    if cmd == "":
+        verbose = Argument("verbose", "OPTION", bool, "Use verbose output")
+        if verbose not in arguments:
+            arguments.append(verbose)
 
 
 def main() -> None:
