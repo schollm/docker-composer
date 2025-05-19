@@ -1,8 +1,9 @@
 from typing import Iterable, Iterator, List, Tuple, Type
 
 import attr
-from loguru import logger
+import logging
 
+logger = logging.getLogger(__name__)
 OPTION = "OPTION"
 
 _TYPE_CONVERSIONS = {
@@ -107,7 +108,7 @@ def _get_type(type_name) -> Type:
         if "=" in type_name:
             res = dict
         else:
-            logger.warning("Unknown type {}, use str", type_name)
+            logger.warning("Unknown type %s, use str", type_name)
             res = str
     return res
 
@@ -141,7 +142,7 @@ def _get_type_name_from_default(default: str) -> str:
         try:
             return eval(default).__class__.__name__
         except NameError:
-            logger.warning("Could not get type for value '{}'", default)
+            logger.warning("Could not get type for value '%s'", default)
             return "str"
 
 

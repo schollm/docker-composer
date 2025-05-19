@@ -49,7 +49,7 @@ print(process.stdout.encode("UTF-8"))
 | **Type**       | Package  | Comment                         |
 | -------------- |----------| ------------------------------- |
 | **Linter**     | `black`  | Also for auto-formatted modules |
-| **Logging**    | `loguru` |                                 |
+| **Logging**    | `logging`    |                                 |
 | **Packaging**  | `uv`     |                                 |
 | **Tests**      | `pytest` |                                 |
 | **Typing**     | `mypy`   | Type all methods                |

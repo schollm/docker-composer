@@ -4,7 +4,9 @@ from operator import add
 from typing import Iterable, Iterator, List, Optional
 
 import attr
-from loguru import logger
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def _flatten(lists: Iterator[list]):
