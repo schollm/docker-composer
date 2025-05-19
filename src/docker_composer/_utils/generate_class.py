@@ -82,7 +82,7 @@ def indent(lines: Union[str, List[str]], level: int = 4) -> str:
     """
     if isinstance(lines, str):
         lines = lines.split("\n")
-    lines = _flatten([l.split("\n") for l in lines])
+    lines = _flatten([line.split("\n") for line in lines])
     prefix = " " * level
     if lines:
         return prefix + f"\n{prefix}".join(lines)
@@ -131,7 +131,8 @@ def get_def_commands(
         new_imports = [
             f"import docker_composer.runner.cmd.{cmd}",
         ]
-        yield f'''
+        yield (
+            f'''
 def {cmd}(self, {args}) -> {class_name}:
     """
 {indent(sections["general"], nl)}
@@ -141,7 +142,9 @@ def {cmd}(self, {args}) -> {class_name}:
     runner = {class_name}(**{{k: v for k, v in locals().items() if k != "self"}})
     runner._parent_cmd = self._call_cmd()
     return runner
-''', new_imports
+''',
+            new_imports,
+        )
 
 
 def generate_class(class_name: str, cmd: str, level=0) -> str:

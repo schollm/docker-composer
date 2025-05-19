@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Iterator, List, Optional, Tuple, Type
+from typing import Iterable, Iterator, List, Tuple, Type
 
 import attr
 from loguru import logger
@@ -45,7 +45,7 @@ class Argument:
 
     @property
     def type_str(self) -> str:
-        return "Any" if self.type == object else self.type.__name__
+        return "Any" if self.type is object else self.type.__name__
 
     @property
     def is_option(self) -> bool:
