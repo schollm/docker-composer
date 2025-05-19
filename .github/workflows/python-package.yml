@@ -19,7 +19,7 @@ jobs:
           src: "./src"
           args: "check"
       - name: 'Ruff check format'
-        run:  uv run format --check
+        run:  ruff format --check
 
   test:
     name: Test Python 🐍 application
