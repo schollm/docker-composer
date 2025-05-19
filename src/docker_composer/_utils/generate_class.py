@@ -8,9 +8,12 @@ from typing import Iterable, Iterator, List, Mapping, Set, Tuple, Union
 import black
 import isort
 from isort.exceptions import ISortError
-from loguru import logger
+
 
 from docker_composer._utils.argument import Argument, parse_dc_argument
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @lru_cache()
