@@ -1,10 +1,10 @@
 test:
+	uv run ruff check
+	uv run ruff format --check
 	uv run pytest
-	uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
 format:
-	black .
-	isort .
+	uv run ruff format
 
 publish:
 	uv build

@@ -18,8 +18,8 @@ jobs:
         with:
           src: "./src"
           args: "check"
-      - name: 'Flake8'
-        run:  uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      - name: 'Ruff check format'
+        run:  uv run format --check
 
   test:
     name: Test Python 🐍 application
