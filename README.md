@@ -46,11 +46,11 @@ print(process.stdout.encode("UTF-8"))
 
 ### Coding Standards
 
-| **Type**       | Package  | Comment                         |
-| -------------- |----------| ------------------------------- |
-| **Linter**     | `black`  | Also for auto-formatted modules |
-| **Logging**    | `logging`    |                                 |
-| **Packaging**  | `uv`     |                                 |
-| **Tests**      | `pytest` |                                 |
-| **Typing**     | `mypy`   | Type all methods                |
-| **Imports**    | `isort`  |                                 |
+| **Type**       | Package   | Comment                         |
+| -------------- |-----------| ------------------------------- |
+| **Linter**     | `ruff`    | Also for auto-formatted modules |
+| **Logging**    | `logging` |                                 |
+| **Packaging**  | `uv`      |                                 |
+| **Tests**      | `pytest`  |                                 |
+| **Typing**     | `mypy`    | Type all methods                |
+| **Imports**    | `ruff`    |                                 |
