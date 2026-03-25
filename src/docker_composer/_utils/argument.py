@@ -64,6 +64,7 @@ class Argument:
 
         words = iter(line.split())
         has_more = True
+        default_str = ""
         while has_more:
             arg, default_str, has_more = _parse_arg(next(words))
         type_desc = next(words)
