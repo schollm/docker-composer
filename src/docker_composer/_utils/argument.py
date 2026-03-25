@@ -1,7 +1,7 @@
 from typing import Iterable, Iterator
 
-import attr
 import logging
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 OPTION = "OPTION"
@@ -39,7 +39,7 @@ _TYPE_CONVERSIONS = {
 }
 
 
-@attr.s(auto_attribs=True, frozen=True)
+@dataclass(frozen=True)
 class Argument:
     arg: str
     type_desc: str

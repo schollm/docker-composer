@@ -1,6 +1,6 @@
 try:
     from docker_composer.runner.root import DockerComposeRoot as DockerCompose
-except ImportError:
+except (ImportError, ValueError):
     pass
 
 __all__ = ["DockerCompose"]
