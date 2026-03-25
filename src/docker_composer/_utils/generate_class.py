@@ -147,7 +147,7 @@ def {cmd}(self, {args}) -> {class_name}:
         )
 
 
-def generate_class(cmd: str, level=0) -> str:
+def generate_class(cmd: str, level: int = 0) -> str:
     class_name = f"DockerCompose{(cmd or 'Root').capitalize()}"
     docker_lines = get_help_message(cmd)
     nl = level + 4
@@ -217,7 +217,8 @@ def write_class(cmd: str = "") -> None:
     file_name.write_text(class_str, encoding="utf-8")
 
 
-def _add_custom_arguments(cmd: str, arguments: list[Argument]):
+def _add_custom_arguments(cmd: str, arguments: list[Argument]) -> None:
+    """Add the verbose option to arguments."""
     if cmd == "":
         verbose = Argument("verbose", "OPTION", bool, "Use verbose output")
         if verbose not in arguments:
