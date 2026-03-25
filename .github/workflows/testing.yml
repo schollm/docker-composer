@@ -21,19 +21,17 @@ jobs:
     name: Test Python 🐍 application
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ["3.12"]
-        # Add all python versions for ubuntu.
+        os: ['ubuntu-latest']
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        # Add all OS and coverage for one python version
         include:
           - os: "ubuntu-latest"
-            python-version: "3.9"
-          - os: "ubuntu-latest"
-            python-version: "3.10"
-          - os: "ubuntu-latest"
-            python-version: "3.11"
-          - os: "ubuntu-latest"
-            python-version: "3.13"
+            python-version: "3.14"
             coverage: true
+          - os: 'macos-latest'
+            python-version: "3.14"
+          - os: 'windows-latest'
+            python-version: "3.14"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
