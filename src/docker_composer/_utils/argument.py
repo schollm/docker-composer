@@ -49,7 +49,9 @@ class Argument:
 
     @property
     def type_str(self) -> str:
-        return "Any" if self.type is object else self.type.__name__
+        if self.type is object:
+            raise ValueError(self.type)
+        return self.type.__name__
 
     @property
     def is_option(self) -> bool:
