@@ -180,7 +180,7 @@ def generate_class(cmd: str, level=0) -> str:
 # for {_version("docker-compose")}
 
 import attr
-from typing import Optional, List
+from typing import Optional
 from docker_composer.base import DockerBaseRunner
 {new_line.join(add_imports)}
 
@@ -191,7 +191,7 @@ class {class_name}(DockerBaseRunner):
     """
 {indent(args, level=nl)}
     _cmd: str = "{cmd or ""}"
-    _options: List[str] = [{options}]
+    _options: list[str] = [{options}]
 {indent(cmd_fns, level=nl)}
 ''',
         level=level,
