@@ -154,7 +154,8 @@ def {cmd}(self, {args}) -> {class_name}:
         )
 
 
-def generate_class(class_name: str, cmd: str, level=0) -> str:
+def generate_class(cmd: str, level=0) -> str:
+    class_name = f"DockerCompose{(cmd or 'Root').capitalize()}"
     docker_lines = get_help_message(cmd)
     nl = level + 4
     sections, arguments = parse_help(docker_lines)
@@ -217,12 +218,8 @@ def write_class(cmd: str) -> None:
     :return:
     """
     base_path = Path(__file__).parents[1] / "runner"
-    if cmd:
-        file_name = base_path / "cmd" / f"{cmd}.py"
-    else:
-        file_name = base_path / "root.py"
-
-    class_str = generate_class(f"DockerCompose{(cmd or 'Root').capitalize()}", cmd)
+    file_name = (base_path / "cmd" / f"{cmd}.py") if cmd else (base_path / "root.py")
+    class_str = generate_class(cmd)
     logger.info("Write {:<8s} -> {}", cmd, file_name)
     file_name.write_text(class_str, encoding="utf-8")
 
