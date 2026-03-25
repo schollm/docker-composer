@@ -1,7 +1,7 @@
 import subprocess
 from functools import reduce
 from operator import add
-from typing import Iterable, Iterator, List, Optional
+from typing import Iterable, List, Optional
 
 import attr
 import logging
@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def _flatten(lists: Iterator[list]):
+def _flatten(lists: Iterable[list]):
     """Flatten an iterable of lists"""
     return reduce(add, lists, [])
 
