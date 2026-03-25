@@ -1,9 +1,9 @@
 import subprocess
 from functools import reduce
 from operator import add
-from typing import Iterable, List, Optional
+from typing import Iterable, Optional
+import dataclasses as _dc
 
-import attr
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,13 +14,13 @@ def _flatten(lists: Iterable[list]):
     return reduce(add, lists, [])
 
 
-@attr.s
+@_dc.dataclass()
 class DockerBaseRunner:
-    _cmd: Optional[str] = None
-    _options: List[str] = []
-    _parent_cmd: List[str] = []
+    _cmd: Optional[str] = _dc.field(default=None, init=False, repr=False)
+    _options: list[str] = _dc.field(default_factory=list, init=False, repr=False)
+    _parent_cmd: list[str] = _dc.field(default_factory=list, init=False, repr=False)
 
-    def _get_arg(self, key, value) -> List[str]:
+    def _get_arg(self, key, value) -> list[str]:
         if value is None:
             return []
         arg = f"--{key.replace('_', '-')}"
@@ -33,14 +33,15 @@ class DockerBaseRunner:
         else:
             return [arg, str(value)]
 
-    def _get_args(self) -> List[str]:
+    def _get_args(self) -> list[str]:
+        fields = _dc.asdict(self)
         return _flatten(
             self._get_arg(k, v)
-            for (k, v) in attr.asdict(self, recurse=False).items()
+            for (k, v) in fields.items()
             if v is not None and not k.startswith("_")
         )
 
-    def _call_cmd(self, arguments: Iterable[str] = ()) -> List[str]:
+    def _call_cmd(self, arguments: Iterable[str] = ()) -> list[str]:
         return [
             arg
             for arg in (

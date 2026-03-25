@@ -16,9 +16,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
 ]
-dependencies = [
-    "attrs>=20.3.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
 generate = [
