@@ -3,7 +3,7 @@ from collections import defaultdict
 from functools import lru_cache, reduce
 from operator import add
 from pathlib import Path
-from typing import Iterable, Iterator, List, Mapping, Set, Tuple, Union
+from typing import Iterable, Iterator, Mapping, Union
 
 import black
 import isort
@@ -52,12 +52,12 @@ def get_help_message(subcommand: str = "") -> str:
     return process.stdout
 
 
-def collect_help_lines(msg: str) -> Mapping[str, List[str]]:
+def collect_help_lines(msg: str) -> Mapping[str, list[str]]:
     """Collect help messages into sections.
     :param msg: Output from docker-compose <cmd> --help
     :returns Mapping from section header to lines as lists. First (unnamed) section gets name "general"
     """
-    parts: Mapping[str, List[str]] = defaultdict(list)
+    parts: Mapping[str, list[str]] = defaultdict(list)
     part = "general"
     for line in msg.split("\n"):
         if not line:
@@ -69,7 +69,7 @@ def collect_help_lines(msg: str) -> Mapping[str, List[str]]:
     return parts
 
 
-def parse_help(msg: str) -> Tuple[Mapping[str, List[str]], List[Argument]]:
+def parse_help(msg: str) -> tuple[Mapping[str, list[str]], list[Argument]]:
     """Helper function, get sections and arguments from docker-compose <cmd> --help text"""
     sections = collect_help_lines(msg)
     arguments = parse_dc_argument(sections["options"])
@@ -81,7 +81,7 @@ def _flatten(lists: Iterable[list]):
     return reduce(add, lists, [])
 
 
-def indent(lines: Union[str, List[str]], level: int = 4) -> str:
+def indent(lines: Union[str, list[str]], level: int = 4) -> str:
     """Indent lines by `level`.
     :param lines: List of strings or a single string. A single string is splt up into individual lines.
     :param level: number of spaces to indent
@@ -97,7 +97,7 @@ def indent(lines: Union[str, List[str]], level: int = 4) -> str:
         return ""
 
 
-def get_docstring(sections: Mapping[str, List[str]]) -> List[str]:
+def get_docstring(sections: Mapping[str, list[str]]) -> list[str]:
     """Get (unindeted) docstring from docker-compose <cmd> --help. Use general and usage section.
     :param sections: Output from `collect_help_lines`
     """
@@ -108,15 +108,15 @@ def get_docstring(sections: Mapping[str, List[str]]) -> List[str]:
     return lines
 
 
-def type_arg(arg: Argument) -> Tuple[str, str]:
+def type_arg(arg: Argument) -> tuple[str, str]:
     """Generate the argument for docker-compose as a string, together with the doc-string"""
     type_str = f"Optional[{arg.type_str}]"
     return f"{arg.arg}: {type_str} = None", f'"""{arg.description}"""'
 
 
 def get_def_commands(
-    sections: Mapping[str, List[str]], level: int = 0
-) -> Iterator[Tuple[str, List[str]]]:
+    sections: Mapping[str, list[str]], level: int = 0
+) -> Iterator[tuple[str, list[str]]]:
     """Generate command functions as string"""
     commands = sections.get("commands", None)
     if not commands:
@@ -161,13 +161,13 @@ def generate_class(cmd: str, level=0) -> str:
     sections, arguments = parse_help(docker_lines)
     _add_custom_arguments(cmd, arguments)
     cmd_fns = ""
-    add_imports: Set[str] = set()
+    add_imports: set[str] = set()
     if "commands" in sections:
         logger.info("Found commands in section {}", cmd)
         for cmd_fn, add_import in get_def_commands(sections):
             cmd_fns += cmd_fn
             add_imports = add_imports.union(add_import)
-    args: List[str] = _flatten(list(type_arg(arg)) for arg in arguments)
+    args: list[str] = _flatten(list(type_arg(arg)) for arg in arguments)
 
     # List of argument that are options only
     options = ", ".join([f'"{arg.arg}"' for arg in arguments if arg.is_option])
