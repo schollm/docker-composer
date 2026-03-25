@@ -38,7 +38,11 @@ def _version(prog: str) -> str:
 def get_help_message(subcommand: str = "") -> str:
     """Obtain the help message for subcommand from docker-compose."""
     args = [arg for arg in ["docker-compose", subcommand, "--help"] if arg]
-    process = subprocess.run(args, capture_output=True, text=True)
+    try:
+        process = subprocess.run(args, capture_output=True, text=True)
+    except Exception:
+        logger.error("FAILED to run %s.", args)
+        raise
     if process.returncode:
         logger.error(
             "docker-compose {} --help exited with {}:", subcommand, process.returncode
