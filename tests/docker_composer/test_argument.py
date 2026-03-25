@@ -80,7 +80,7 @@ def test__get_type(type_, expect):
         ("-foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
         ("-f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
         ("-f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
-        ("-f, --foo BAR  Bar", Argument("foo", "BAR", str, "Bar")),
+        ("-f, --foo BAR  Bar Bay", Argument("foo", "BAR", str, "Bar Bay")),
     ],
 )
 def test__from_line_has_sep(line, expect):

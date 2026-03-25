@@ -136,10 +136,8 @@ def _from_line_has_sep(line) -> "Argument":
     """
     min_arg_chars = 2  #  Simple argument with single dash (e.g. -x)
     min_full_chars = 4  # Named argument with double-dash (e.g. --xy)
-    sep = 2  # Separator between arguments (comma-space, ", ")
-
-    desc_idx = line[min_arg_chars :].index("  ")
-    desc = line[desc_idx + sep + min_full_chars :].strip()
+    desc_idx = line[min_arg_chars:].index("  ")
+    desc = line[desc_idx + min_full_chars :].strip()
     args = iter(line[: desc_idx + min_full_chars].split())
     arg, default, has_more = "", "", True
     while has_more:
