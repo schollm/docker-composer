@@ -209,7 +209,7 @@ class {class_name}(DockerBaseRunner):
         return res
 
 
-def write_class(cmd: str) -> None:
+def write_class(cmd: str = "") -> None:
     """
     Generate a class for `cmd` and write it to `file_name`
 
@@ -232,8 +232,8 @@ def _add_custom_arguments(cmd: str, arguments: list[Argument]):
 
 
 def main() -> None:
-    write_class("")
-    docker_lines = get_help_message("")
+    write_class()
+    docker_lines = get_help_message()
     sections, _ = parse_help(docker_lines)
     for cmd_line in sections["commands"]:
         if not cmd_line:
