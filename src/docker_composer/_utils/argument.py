@@ -39,7 +39,7 @@ _TYPE_CONVERSIONS = {
 }
 
 
-@attr.s(auto_attribs=True, frozen=True, eq=False)
+@attr.s(auto_attribs=True, frozen=True)
 class Argument:
     arg: str
     type_desc: str
@@ -62,14 +62,6 @@ class Argument:
         if "  " in line:
             return _from_line_has_sep(line)
         raise ValueError(line)
-
-    def __eq__(self, other) -> bool:
-        if not isinstance(other, type(self)):
-            return False
-        return self.arg == other.arg
-
-    def __hash__(self):
-        return hash(self.arg)
 
 
 def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:

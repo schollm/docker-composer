@@ -50,7 +50,7 @@ def test_Argument_is_option(input, expect):
     "input_, expect",
     [
         (Argument("a", "x", int, ""), True),
-        (Argument("a", "xx", bool, "desc"), True),
+        (Argument("a", "xx", bool, "desc"), False),
         (Argument("b", "x", int, ""), False),
         (Argument("b", "xx", bool, "desc"), False),
     ],
