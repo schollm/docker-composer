@@ -4,6 +4,8 @@ All commands and parameters are exposed as python classes and attributes
 to allow for full auto-completion of its parameters with IDEs
 that support it.
 
+**Runtime footprint:** This library is **stdlib-only** (zero third-party runtime dependencies).
+
 
 ## Install
 ```shell script
