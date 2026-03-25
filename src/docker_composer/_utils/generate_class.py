@@ -25,7 +25,7 @@ def project_root():
     raise EnvironmentError("No pyproject.toml found in path hierarchy")
 
 
-@lru_cache(None)
+@lru_cache()
 def _version(prog: str) -> str:
     return (
         subprocess.run((prog, "--version"), capture_output=True)
