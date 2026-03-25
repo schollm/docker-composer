@@ -3,7 +3,7 @@ from collections import defaultdict
 from functools import lru_cache, reduce
 from operator import add
 from pathlib import Path
-from typing import Iterable, Iterator, Mapping, Union
+from typing import Iterator, Mapping, Union
 
 import black
 import isort
@@ -76,11 +76,6 @@ def parse_help(msg: str) -> tuple[Mapping[str, list[str]], list[Argument]]:
     return sections, arguments
 
 
-def _flatten(lists: Iterable[list]):
-    """Flatten an iterable of lists"""
-    return reduce(add, lists, [])
-
-
 def indent(lines: Union[str, list[str]], level: int = 4) -> str:
     """Indent lines by `level`.
     :param lines: List of strings or a single string. A single string is splt up into individual lines.
@@ -89,7 +84,7 @@ def indent(lines: Union[str, list[str]], level: int = 4) -> str:
     """
     if isinstance(lines, str):
         lines = lines.split("\n")
-    lines = _flatten([line.split("\n") for line in lines])
+    lines = reduce(add, (line.split("\n") for line in lines), [])
     prefix = " " * level
     if lines:
         return prefix + f"\n{prefix}".join(lines)
@@ -167,7 +162,7 @@ def generate_class(cmd: str, level=0) -> str:
         for cmd_fn, add_import in get_def_commands(sections):
             cmd_fns += cmd_fn
             add_imports = add_imports.union(add_import)
-    args: list[str] = _flatten(list(type_arg(arg)) for arg in arguments)
+    args: list[str] = reduce(add, (list(type_arg(arg)) for arg in arguments), [])
 
     # List of argument that are options only
     options = ", ".join([f'"{arg.arg}"' for arg in arguments if arg.is_option])
