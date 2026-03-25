@@ -71,7 +71,7 @@ class DockerBaseRunner:
         :return CompletedProcess instance
         """
         cmd = self._call_cmd(args)
-        logger.info("# {}", " ".join(cmd))
+        logger.info("# %s", " ".join(cmd))
         p = subprocess.run(
             cmd,
             stdin=stdin,
@@ -79,7 +79,7 @@ class DockerBaseRunner:
             stderr=stderr,
             **kwargs,
         )
-        logger.debug("Returned from {}: {}", cmd[0], p.returncode)
+        logger.debug("Returned from %s: %s", cmd[0], p.returncode)
         return p
 
     def Popen(
@@ -100,7 +100,7 @@ class DockerBaseRunner:
         :return: An subprocess.Popen instance
         """
         cmd = self._call_cmd(args)
-        logger.info("# {}", " ".join(cmd))
+        logger.info("# %s", " ".join(cmd))
         return subprocess.Popen(
             cmd,
             stdin=stdin,

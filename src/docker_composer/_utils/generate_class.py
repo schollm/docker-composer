@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 def project_root():
     for path in Path(__file__).parents:
         if "pyproject.toml" in (p.name for p in path.iterdir()):
-            logger.debug("Project Path root: {}", path)
+            logger.debug("Project Path root: %s", path)
             return path
     raise EnvironmentError("No pyproject.toml found in path hierarchy")
 
@@ -45,7 +45,7 @@ def get_help_message(subcommand: str = "") -> str:
         raise
     if process.returncode:
         logger.error(
-            "docker-compose {} --help exited with {}:", subcommand, process.returncode
+            "docker-compose %s --help exited with %s:", subcommand, process.returncode
         )
         logger.error(process.stderr)
 
@@ -125,7 +125,7 @@ def get_def_commands(
         if not line.strip():
             continue
         cmd = line.split()[0]
-        logger.debug("Generate run for {}", cmd)
+        logger.debug("Generate run for %s", cmd)
         docker_lines = get_help_message(cmd)
         nl = level + 4
         sections, arguments = parse_help(docker_lines)
@@ -163,7 +163,7 @@ def generate_class(cmd: str, level=0) -> str:
     cmd_fns = ""
     add_imports: set[str] = set()
     if "commands" in sections:
-        logger.info("Found commands in section {}", cmd)
+        logger.info("Found commands in section %s", cmd)
         for cmd_fn, add_import in get_def_commands(sections):
             cmd_fns += cmd_fn
             add_imports = add_imports.union(add_import)
@@ -220,7 +220,7 @@ def write_class(cmd: str = "") -> None:
     base_path = Path(__file__).parents[1] / "runner"
     file_name = (base_path / "cmd" / f"{cmd}.py") if cmd else (base_path / "root.py")
     class_str = generate_class(cmd)
-    logger.info("Write {:<8s} -> {}", cmd, file_name)
+    logger.info("Write %s -> %s", cmd, file_name)
     file_name.write_text(class_str, encoding="utf-8")
 
 
