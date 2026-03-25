@@ -9,14 +9,12 @@ from docker_composer.base import DockerBaseRunner
 
 
 @attr.s(auto_attribs=True)
-class DockerComposeStats(DockerBaseRunner):
+class DockerComposeVolumes(DockerBaseRunner):
     """
-    Usage:  docker compose stats [OPTIONS] [SERVICE]
-    Display a live stream of container(s) resource usage statistics
+    Usage:  docker compose volumes [OPTIONS] [SERVICE...]
+    List volumes
     """
 
-    all: Optional[bool] = None
-    """Show all containers (default shows just running)"""
     dry_run: Optional[bool] = None
     """Execute command in dry run mode"""
     format: Optional[str] = None
@@ -28,18 +26,13 @@ class DockerComposeStats(DockerBaseRunner):
        'json':             Print in JSON format
        'TEMPLATE':         Print output using the given
        Go template.
-       Refer to
-       https://docs.docker.com/engine/cli/formatting/
+       Refer to https://docs.docker.com/go/formatting/
        for more information about formatting output with
-       templates"""
-    no_stream: Optional[bool] = None
-    """Disable streaming stats and only pull the first result"""
-    no_trunc: Optional[bool] = None
-    """Do not truncate output"""
-    _cmd: str = "stats"
+       templates (default "table")"""
+    quiet: Optional[bool] = None
+    """Only display volume names"""
+    _cmd: str = "volumes"
     _options: List[str] = [
-        "all",
         "dry_run",
-        "no_stream",
-        "no_trunc",
+        "quiet",
     ]

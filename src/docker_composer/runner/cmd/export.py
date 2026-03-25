@@ -9,20 +9,20 @@ from docker_composer.base import DockerBaseRunner
 
 
 @attr.s(auto_attribs=True)
-class DockerComposePort(DockerBaseRunner):
+class DockerComposeExport(DockerBaseRunner):
     """
-    Usage:  docker compose port [OPTIONS] SERVICE PRIVATE_PORT
-    Print the public port for a port binding
+    Usage:  docker compose export [OPTIONS] SERVICE
+    Export a service container's filesystem as a tar archive
     """
 
     dry_run: Optional[bool] = None
     """Execute command in dry run mode"""
     index: Optional[int] = None
-    """Index of the container if service has multiple
-       replicas"""
-    protocol: Optional[str] = None
-    """tcp or udp (default "tcp")"""
-    _cmd: str = "port"
+    """index of the container if service has multiple
+       replicas."""
+    output: Optional[str] = None
+    """Write to a file, instead of STDOUT"""
+    _cmd: str = "export"
     _options: List[str] = [
         "dry_run",
     ]
