@@ -44,6 +44,7 @@ include = ["src/docker_composer"]
 
 [tool.hatch.build.targets.wheel]
 include = ["src/docker_composer"]
+exclude = ["src/docker_composer/_utils"]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/docker_composer" = "docker_composer"
