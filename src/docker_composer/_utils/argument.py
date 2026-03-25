@@ -145,11 +145,7 @@ def _get_type_name_from_default(default: str) -> str:
     elif default == "proto":
         return "str"
     else:
-        try:
-            return eval(default).__class__.__name__
-        except NameError:
-            logger.warning("Could not get type for value '%s'", default)
-            return "str"
+        raise NotImplementedError(default)
 
 
 def _from_line_has_sep(line) -> "Argument":
