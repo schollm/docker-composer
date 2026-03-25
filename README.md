@@ -44,6 +44,20 @@ print(process.stdout.encode("UTF-8"))
 
 ## Develop
 
+### Development Setup
+
+The `generate` extra is maintainer tooling for code generation/formatting and is not required for normal package usage.
+
+```bash
+uv sync --group dev --extra generate
+```
+
+If you only need the generation tooling, you can install just the extra:
+
+```bash
+uv sync --extra generate
+```
+
 ### Coding Standards
 
 | **Type**       | Package   | Comment                         |
