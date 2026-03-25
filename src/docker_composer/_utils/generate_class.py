@@ -28,9 +28,8 @@ def project_root():
 @lru_cache()
 def _version(prog: str) -> str:
     return (
-        subprocess.run((prog, "--version"), capture_output=True)
+        subprocess.run((prog, "--version"), capture_output=True, text=True)
         .stdout.strip()
-        .decode("UTF-8")
     )
 
 
