@@ -22,7 +22,7 @@ from docker_composer import DockerCompose
 )
 def test_root__call_cmd(root_args, expected):
     res = DockerCompose(**root_args)._call_cmd(["bar"])
-    assert res == ["docker-compose"] + expected + ["bar"]
+    assert res == ["docker", "compose", *expected, "bar"]
 
 
 @pytest.mark.parametrize(
@@ -37,6 +37,6 @@ def test_root__call_cmd(root_args, expected):
 )
 def test_build__call_cmd(cmd_args, expected_cmd):
     res = DockerCompose(compatibility=True).build(**cmd_args)._call_cmd(["bar"])
-    assert res == ["docker-compose", "--compatibility", "build"] + expected_cmd + [
+    assert res == ["docker", "compose", "--compatibility", "build"] + expected_cmd + [
         "bar"
     ]

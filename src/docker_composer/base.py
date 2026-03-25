@@ -44,7 +44,7 @@ class DockerBaseRunner:
         return [
             arg
             for arg in (
-                (self._parent_cmd or ["docker-compose"])
+                (self._parent_cmd or ["docker", "compose"])
                 + [self._cmd or ""]
                 + self._get_args()
                 + list(arguments)
