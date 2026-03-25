@@ -1,4 +1,4 @@
-from typing import Iterable, Iterator, List, Tuple, Type
+from typing import Iterable, Iterator, Type
 
 import attr
 import logging
@@ -95,7 +95,7 @@ def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:
         yield res.strip()
 
 
-def parse_dc_argument(lines: List[str]) -> List[Argument]:
+def parse_dc_argument(lines: list[str]) -> list[Argument]:
     """
     Parse arguments from lines of docker-compose specifications
     :param lines: Lines of the Options sections from `docker-compose --help`.
@@ -116,7 +116,7 @@ def _get_type(type_name) -> Type:
     return res
 
 
-def _parse_arg(arg: str) -> Tuple[str, str, bool]:
+def _parse_arg(arg: str) -> tuple[str, str, bool]:
     while arg.startswith("-"):
         arg = arg[1:]
     # if argument ends with a comma, it is followed by an alias. (usually -f, --foo)
