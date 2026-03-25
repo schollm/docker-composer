@@ -1,4 +1,4 @@
-from typing import Iterable, Iterator, Type
+from typing import Iterable, Iterator
 
 import attr
 import logging
@@ -43,15 +43,15 @@ _TYPE_CONVERSIONS = {
 class Argument:
     arg: str
     type_desc: str
-    type: Type
+    type_: type
     description: str
     default: str = ""
 
     @property
     def type_str(self) -> str:
-        if self.type is object:
-            raise ValueError(self.type)
-        return self.type.__name__
+        if self.type_ is object:
+            raise ValueError(self.type_)
+        return self.type_.__name__
 
     @property
     def is_option(self) -> bool:
@@ -108,7 +108,7 @@ def parse_dc_argument(lines: list[str]) -> list[Argument]:
     return [Argument.from_line(line) for line in iter_lines if "--version" not in line]
 
 
-def _get_type(type_name) -> Type:
+def _get_type(type_name) -> type:
     res = _TYPE_CONVERSIONS.get(type_name, None)
     if res is None:
         if "=" in type_name:
