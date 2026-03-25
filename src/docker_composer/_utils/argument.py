@@ -156,9 +156,13 @@ def _from_line_has_sep(line) -> "Argument":
     :param line: a single line with the description separated from the definition by at least two blanks
     :return: Argument
     """
-    desc_idx = line[4:].index("  ")
-    desc = line[desc_idx + 2 + 4 :].strip()
-    args = iter(line[: desc_idx + 4].split())
+    min_arg_chars = 2  #  Simple argument with single dash (e.g. -x)
+    min_full_chars = 4  # Named argument with double-dash (e.g. --xy)
+    sep = 2  # Separator between arguments (comma-space, ", ")
+
+    desc_idx = line[min_arg_chars :].index("  ")
+    desc = line[desc_idx + sep + min_full_chars :].strip()
+    args = iter(line[: desc_idx + min_full_chars].split())
     arg, default, has_more = "", "", True
     while has_more:
         arg, default, has_more = _parse_arg(next(args))
