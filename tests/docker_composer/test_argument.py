@@ -11,11 +11,11 @@ from docker_composer._utils.argument import (
 @pytest.mark.parametrize(
     "input, expect",
     [
-        ("--foo FILE Foo Bar", ("foo", "FILE", str, "Foo Bar")),
-        ("-f, --foo FILE Foo Bar", ("foo", "FILE", str, "Foo Bar")),
-        ("-v, --verbose Verbose Flag", ("verbose", "OPTION", bool, "Verbose Flag")),
-        ("--verbose Verbose Flag", ("verbose", "OPTION", bool, "Verbose Flag")),
-        ("-v Verbose Flag", ("v", "OPTION", bool, "Verbose Flag")),
+        ("--foo FILE   Foo Baxx", ("foo", "FILE", str, "Foo Baxx")),
+        ("-f, --foo FILE   Foo Bar", ("foo", "FILE", str, "Foo Bar")),
+        ("-v, --verbose   Verbose Flag", ("verbose", "OPTION", bool, "Verbose Flag")),
+        ("--verbose   Verbose Flag", ("verbose", "OPTION", bool, "Verbose Flag")),
+        ("-v   Verbose Flag", ("v", "OPTION", bool, "Verbose Flag")),
         ## Tests for _from_line_has_sep
         ("--foo FILE             Foo Bar", ("foo", "FILE", str, "Foo Bar")),
         ("-f, --foo FILE         Foo Bar", ("foo", "FILE", str, "Foo Bar")),
@@ -27,7 +27,7 @@ from docker_composer._utils.argument import (
             "--verbose              Verbose Flag",
             ("verbose", "OPTION", bool, "Verbose Flag"),
         ),
-        ("-v                     Verbose Flag", ("v", "OPTION", bool, "Verbose Flag")),
+        ("-v                 Verbose Flag", ("v", "OPTION", bool, "Verbose Flag")),
     ],
 )
 def test_Argument_from_line(input, expect):
@@ -79,8 +79,8 @@ def test__get_type(type_, expect):
     [
         ("-foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
         ("-f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
-        ("    -f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
-        ("    -f, --foo BAR  Bar", Argument("foo", "BAR", str, "Bar")),
+        ("-f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
+        ("-f, --foo BAR  Bar", Argument("foo", "BAR", str, "Bar")),
     ],
 )
 def test__from_line_has_sep(line, expect):

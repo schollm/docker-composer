@@ -61,21 +61,7 @@ class Argument:
     def from_line(line: str) -> "Argument":
         if "  " in line:
             return _from_line_has_sep(line)
-
-        words = iter(line.split())
-        has_more = True
-        default_str = ""
-        while has_more:
-            arg, default_str, has_more = _parse_arg(next(words))
-        type_desc = next(words)
-        type_from_default = _get_type_name_from_default(default_str)
-        desc = " ".join(words)
-        if type_desc[1:].islower() and "=" not in type_desc:
-            desc = f"{type_desc} {desc}"
-            type_desc = type_from_default
-
-        type_ = _get_type(type_from_default if default_str else type_desc)
-        return Argument(arg, type_desc, type_, desc, default_str)
+        raise ValueError(line)
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, type(self)):
