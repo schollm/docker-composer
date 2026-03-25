@@ -97,7 +97,7 @@ def get_docstring(sections: Mapping[str, list[str]]) -> list[str]:
     lines = sections["general"]
     usages = sections.get("usage", [])
     if usages:
-        lines += ["Usage:"] + usages
+        return [lines, "Usage:", *usages]
     return lines
 
 
