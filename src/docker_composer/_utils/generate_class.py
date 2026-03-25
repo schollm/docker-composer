@@ -46,7 +46,7 @@ def get_help_message(subcommand: str = "") -> str:
         logger.error(
             "docker-compose %s --help exited with %s:", subcommand, process.returncode
         )
-        logger.error(process.stderr)
+        raise RuntimeError(process.stderr)
 
     return process.stdout
 

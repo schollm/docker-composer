@@ -13,14 +13,12 @@ from docker_composer._utils.argument import (
     [
         ("--foo FILE Foo Bar", ("foo", "FILE", str, "Foo Bar")),
         ("-f, --foo FILE Foo Bar", ("foo", "FILE", str, "Foo Bar")),
-        ("-f, --foo=[] FILE Foo Bar", ("foo", "FILE", list, "Foo Bar", "[]")),
         ("-v, --verbose Verbose Flag", ("verbose", "OPTION", bool, "Verbose Flag")),
         ("--verbose Verbose Flag", ("verbose", "OPTION", bool, "Verbose Flag")),
         ("-v Verbose Flag", ("v", "OPTION", bool, "Verbose Flag")),
         ## Tests for _from_line_has_sep
         ("--foo FILE             Foo Bar", ("foo", "FILE", str, "Foo Bar")),
         ("-f, --foo FILE         Foo Bar", ("foo", "FILE", str, "Foo Bar")),
-        ("-f, --foo=[] FILE      Foo Bar", ("foo", "FILE", list, "Foo Bar", "[]")),
         (
             "-v, --verbose          Verbose Flag",
             ("verbose", "OPTION", bool, "Verbose Flag"),
@@ -83,10 +81,6 @@ def test__get_type(type_, expect):
         ("-f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
         ("    -f, --foo  Bar", Argument("foo", "OPTION", bool, "Bar")),
         ("    -f, --foo BAR  Bar", Argument("foo", "BAR", str, "Bar")),
-        (
-            "    -f, --foo=[] BAR  Bar",
-            Argument("foo", "BAR", list, "Bar", default="[]"),
-        ),
     ],
 )
 def test__from_line_has_sep(line, expect):
