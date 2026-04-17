@@ -1,6 +1,6 @@
 [project]
 name = "docker-composer"
-version = "5.1.0"
+version = "5.1.3"
 description = "Use docker-compose (V2) from within Python"
 authors = [{ name = "Micha", email = "schollm-git@gmx.com" }]
 requires-python = ">=3.9,<4.0"
