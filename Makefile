@@ -11,3 +11,4 @@ publish:
 	uv publish
 generate:
 	uv run python src/docker_composer/_utils/generate_class.py
+	uv version $(docker compose version --short)
