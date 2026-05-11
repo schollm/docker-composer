@@ -48,8 +48,9 @@ print(process.stdout.encode("UTF-8"))
 
 ### Development Setup
 
-When developing, the `_utils` module is available for generating the docker_compose module from the `docker compose`
-CLI help output. This is not required for normal package usage.
+When developing, the `_utils` module is available for generating the docker_composer
+module from the `docker compose`CLI help output.
+This is not required for normal package usage.
 
 ```bash
 uv sync --group dev
