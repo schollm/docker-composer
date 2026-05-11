@@ -48,16 +48,12 @@ print(process.stdout.encode("UTF-8"))
 
 ### Development Setup
 
-The `generate` extra is maintainer tooling for code generation/formatting and is not required for normal package usage.
+When developing, the `_utils` module is available for generating the docker_compose module from the `docker compose`
+CLI help output. This is not required for normal package usage.
 
 ```bash
-uv sync --group dev --extra generate
-```
-
-If you only need the generation tooling, you can install just the extra:
-
-```bash
-uv sync --extra generate
+uv sync --group dev
+uv run poe generate
 ```
 
 ### Coding Standards
