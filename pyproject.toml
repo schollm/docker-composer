@@ -32,6 +32,7 @@ Repository = "https://github.com/schollm/docker-composer"
 dev = [
     "black",
     "isort",
+    "poethepoet>=0.30.0",
     "pytest>=6.1.2",
     "pytest-cov>=6.1.1",
     "ruff>=0.11.10",
@@ -62,3 +63,15 @@ addopts = """
   --doctest-modules
 """
 
+[tool.poe.tasks]
+ruff-check = { cmd = "ruff check" }
+ruff-format-check = { cmd = "ruff format --check" }
+pytest =  { cmd = "pytest" }
+format = { cmd = "ruff format" }
+build = { cmd = "uv build" }
+publish-dist = { cmd = "uv publish" }
+generate-code = { cmd = "python src/docker_composer/_utils/generate_class.py" }
+sync-version = { cmd = "python src/docker_composer/_utils/sync_version.py" }
+publish = { sequence = ["build", "publish-dist"] }
+test = { sequence = ["ruff-check", "ruff-format-check", "pytest"] }
+generate = { sequence = ["generate-code", "sync-version"] }
