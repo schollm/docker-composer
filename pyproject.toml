@@ -57,7 +57,7 @@ addopts = """
   --cov=src/docker_composer
   --cov-report=xml:.out/coverage.xml
   --cov-report=html:.out/coverage-html
-  --cov-report term-missing
+  --cov-report term-missing:skip-covered
   --cov-branch
   --doctest-modules
 """
