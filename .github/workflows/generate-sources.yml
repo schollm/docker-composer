@@ -1,0 +1,146 @@
+name: Generate Sources
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * 1"
+  push: # TODO: REMOVE
+
+jobs:
+  generate-and-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.2.0
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Install latest Docker Compose release
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v docker >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y docker.io
+          fi
+
+          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          arch="$(uname -m)"
+          case "$arch" in
+            x86_64) arch="x86_64" ;;
+            aarch64|arm64) arch="aarch64" ;;
+            *)
+              echo "Unsupported architecture: $arch"
+              exit 1
+              ;;
+          esac
+
+          compose_version="$(curl -fsSL https://api.github.com/repos/docker/compose/releases/latest | jq -r '.tag_name')"
+          plugin_dir="$HOME/.docker/cli-plugins"
+          mkdir -p "$plugin_dir"
+          curl -fL "https://github.com/docker/compose/releases/download/${compose_version}/docker-compose-${os}-${arch}" -o "$plugin_dir/docker-compose"
+          chmod +x "$plugin_dir/docker-compose"
+
+          echo "Installed Docker Compose ${compose_version}"
+          docker compose version
+      - name: Update Docker Compose version in pyproject.toml
+        id: version_check
+        shell: bash
+        run: |
+          set -euo pipefail
+          OLD_VERSION="$(uv version)"
+          uv run poe sync-version
+          NEW_VERSION="$(uv version)"
+
+          if [[ "${OLD_VERSION}" != "${NEW_VERSION}" ]]; then
+            echo "version_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "version_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "Updated Docker Compose version from ${OLD_VERSION} to ${NEW_VERSION} in pyproject.toml"
+      - name: Generate source files
+        if: steps.version_check.outputs.version_changed == 'true'
+        run: uv run python -m docker_composer._utils.generate_class
+
+      - name: Detect generated changes
+        if: steps.version_check.outputs.version_changed == 'true'
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          compose_version="$(docker compose version --short 2>/dev/null || docker compose version | awk '{print $NF}')"
+          compose_version="${compose_version// /-}"
+          compose_version="${compose_version//\//-}"
+          branch_name="release/bot-${compose_version}"
+
+          changed_files="$(git status --porcelain | awk '{print $2}' | grep -E '^src/docker_composer/' || true)"
+          if [[ -n "${changed_files}" ]]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "compose_version=${compose_version}" >> "$GITHUB_OUTPUT"
+          echo "branch_name=${branch_name}" >> "$GITHUB_OUTPUT"
+          echo $GITHUB_OUTPUT
+
+      - name: Configure git identity
+        if: steps.version_check.outputs.version_changed == 'true' && steps.detect.outputs.has_changes == 'true'
+        shell: bash
+        run: |
+          git config user.name "docker-composer[bot]"
+          git config user.email "docker-composer[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        if: steps.version_check.outputs.version_changed == 'true' && steps.detect.outputs.has_changes == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          branch_name="${{ steps.detect.outputs.branch_name }}"
+          compose_version="${{ steps.detect.outputs.compose_version }}"
+
+          git checkout -B "$branch_name"
+          git add uv.lock pyproject.toml src/docker_composer
+
+          git commit -m "chore: regenerate sources for Docker Compose ${compose_version}"
+          git push --force-with-lease origin "$branch_name"
+
+      - name: Create or update pull request
+        if: steps.version_check.outputs.version_changed == 'true' && steps.detect.outputs.has_changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          branch_name="${{ steps.detect.outputs.branch_name }}"
+          compose_version="${{ steps.detect.outputs.compose_version }}"
+          base_branch="${{ github.event.repository.default_branch }}"
+
+          pr_number="$(gh pr list --head "$branch_name" --base "$base_branch" --json number --jq '.[0].number' || true)"
+
+          if [[ -z "${pr_number}" ]]; then
+            gh pr create \
+              --base "$base_branch" \
+              --head "$branch_name" \
+              --title "chore: regenerate sources for Docker Compose ${compose_version}" \
+              --body "Automated regeneration of source files using Docker Compose ${compose_version}."
+          fi
+
+          gh pr edit "$branch_name" --add-reviewer schollm
