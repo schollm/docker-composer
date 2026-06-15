@@ -67,5 +67,5 @@ publish-dist = { cmd = "uv publish" }
 generate-code = { cmd = "uv run python -m docker_composer._utils.generate_class" }
 sync-version = { cmd = "uv run python -m docker_composer._utils.sync_version" }
 publish = { sequence = ["build", "publish-dist"] }
-test = { sequence = ["ruff-check", "ruff-format-check", "pytest"] }
+test = { sequence = ["ruff-check", "ruff-format-check", "pytest $POE_EXTRA_ARGS"] }
 generate = { sequence = ["generate-code", "sync-version"] }

@@ -1,3 +1,6 @@
+"""Helper modules to parse docker compoose --help arguments"""
+
+from __future__ import annotations
 from typing import Iterable, Iterator
 
 import logging
@@ -137,16 +140,15 @@ def _from_line_has_sep(line) -> "Argument":
     min_arg_chars = 2  #  Simple argument with single dash (e.g. -x)
     min_full_chars = 4  # Named argument with double-dash (e.g. --xy)
     desc_idx = line[min_arg_chars:].index("  ")
+    # Help output can wrap differently depending on terminal width.
+    # Normalize all whitespace so wrapped descriptions are stable.
     desc = line[desc_idx + min_full_chars :].strip()
     args = iter(line[: desc_idx + min_full_chars].split())
     arg, default, has_more = "", "", True
     while has_more:
         arg, default, has_more = _parse_arg(next(args))
     type_from_default = _get_type_name_from_default(default)
-    try:
-        type_desc = next(args)
-    except StopIteration:
-        type_desc = type_from_default
+    type_desc = next(args, type_from_default)
 
     type_ = _get_type(type_from_default if default else type_desc)
     return Argument(arg, type_desc, type_, desc, default=default)
