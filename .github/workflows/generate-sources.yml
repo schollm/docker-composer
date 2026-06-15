@@ -133,7 +133,7 @@ jobs:
           compose_version="${{ steps.detect.outputs.compose_version }}"
           base_branch="${{ github.event.repository.default_branch }}"
 
-          pr_number="$(gh pr list --head "$branch_name" --base "$base_branch" --json number --jq '.[0].number' || true)"
+          pr_number="$(gh pr list --head "$branch_name" --base "$base_branch" --json number --jq '.[0].number // empty' || true)"
 
           if [[ -z "${pr_number}" ]]; then
             gh pr create \
