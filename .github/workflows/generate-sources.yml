@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "17 4 * * 1"
-  push: # TODO: REMOVE
 
 jobs:
   generate-and-pr:
