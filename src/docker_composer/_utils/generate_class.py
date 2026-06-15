@@ -39,13 +39,17 @@ def _version() -> str:
 @lru_cache()
 def get_help_message(subcommand: str = "") -> str:
     """Obtain the help message for subcommand from docker-compose."""
-    cmd = [arg for arg in ["docker", "compose", subcommand, "--help"] if arg]
-    with _resized_terminal(_DEFAULT_HELP_COLUMNS):
-        try:
-            process = subprocess.run(cmd, capture_output=True, text=True)
-        except Exception:
-            logger.error("FAILED to run %s.", cmd)
-            raise
+    cmd = " ".join(arg for arg in ["docker", "compose", subcommand, "--help"] if arg)
+    full_cmd = f"stty cols {_DEFAULT_HELP_COLUMNS}; {cmd}"
+    try:
+        process = subprocess.run(
+            ["script", "-q", "-c", full_cmd, "/dev/null"],
+            capture_output=True,
+            text=True,
+        )
+    except Exception:
+        logger.error("FAILED to run %s.", full_cmd)
+        raise
     if process.returncode:
         logger.error("%s exited with %s:", cmd, process.returncode)
         raise RuntimeError(process.stderr)
@@ -216,21 +220,6 @@ def write_class(cmd: str = "") -> None:
     class_str = generate_class(cmd)
     logger.info("Write %s -> %s", cmd, file_name)
     file_name.write_text(class_str, encoding="utf-8")
-
-
-@contextmanager
-def _resized_terminal(cols: int) -> None:
-    """Resize the terminal to `cols` columns for the duration of the context."""
-    stty_start = subprocess.run(["stty", "size"], capture_output=True, text=True)
-    if stty_start.returncode:
-        logger.error("Failed to get terminal size: %s", stty_start.stderr)
-        raise RuntimeError(stty_start.stderr)
-    _, orig_cols = stty_start.stdout.strip().split()
-    subprocess.run(["stty", "cols", str(cols)])
-    try:
-        yield
-    finally:
-        subprocess.run(["stty", "cols", orig_cols])
 
 
 def _add_custom_arguments(cmd: str, arguments: list[Argument]) -> None:
