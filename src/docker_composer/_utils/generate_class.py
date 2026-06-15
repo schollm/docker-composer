@@ -221,14 +221,12 @@ def write_class(cmd: str = "") -> None:
 @contextmanager
 def _resized_terminal(cols: int) -> None:
     """Resize the terminal to `cols` columns for the duration of the context."""
-    stty_start = subprocess.run(
-        ["script", "-c", "stty size"], capture_output=True, text=True
-    )
+    stty_start = subprocess.run(["stty", "size"], capture_output=True, text=True)
     if stty_start.returncode:
         logger.error("Failed to get terminal size: %s", stty_start.stderr)
         raise RuntimeError(stty_start.stderr)
     _, orig_cols = stty_start.stdout.strip().split()
-    subprocess.run(["script", "-c", f"stty cols {cols}"])
+    subprocess.run(["stty", "cols", str(cols)])
     try:
         yield
     finally:
