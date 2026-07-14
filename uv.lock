@@ -380,7 +380,7 @@ toml = [
 
 [[package]]
 name = "docker-composer"
-version = "5.2.0"
+version = "5.3.0"
 source = { editable = "." }
 
 [package.dev-dependencies]
