@@ -1,17 +1,18 @@
+from __future__ import annotations
+
+import logging
 import subprocess
 from collections import defaultdict
+from collections.abc import Iterator, Mapping
 from functools import lru_cache, reduce
 from operator import add
 from pathlib import Path
-from typing import Iterator, Mapping, Union
 
 import black
 import isort
 from isort.exceptions import ISortError
 
-
 from docker_composer._utils.argument import Argument, parse_dc_argument
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -19,23 +20,23 @@ logger = logging.getLogger(__name__)
 _DEFAULT_HELP_COLUMNS = 120
 
 
-@lru_cache()
+@lru_cache
 def project_root():
     for path in Path(__file__).parents:
         if "pyproject.toml" in (p.name for p in path.iterdir()):
             logger.debug("Project Path root: %s", path)
             return path
-    raise EnvironmentError("No pyproject.toml found in path hierarchy")
+    raise OSError("No pyproject.toml found in path hierarchy")
 
 
-@lru_cache()
+@lru_cache
 def _version() -> str:
     return subprocess.run(
-        ("docker", "compose", "version"), capture_output=True, text=True
+        ("docker", "compose", "version"), capture_output=True, text=True, check=True
     ).stdout.strip()
 
 
-@lru_cache()
+@lru_cache
 def get_help_message(subcommand: str = "") -> str:
     """Obtain the help message for subcommand from docker-compose."""
     cmd = " ".join(arg for arg in ["docker", "compose", subcommand, "--help"] if arg)
@@ -45,6 +46,7 @@ def get_help_message(subcommand: str = "") -> str:
             ["script", "-q", "-c", full_cmd, "/dev/null"],
             capture_output=True,
             text=True,
+            check=True,
         )
     except Exception:
         logger.error("FAILED to run %s.", full_cmd)
@@ -79,7 +81,7 @@ def parse_help(msg: str) -> tuple[Mapping[str, list[str]], list[Argument]]:
     return sections, arguments
 
 
-def indent(lines: Union[str, list[str]], level: int = 4) -> str:
+def indent(lines: str | list[str], level: int = 4) -> str:
     """Indent lines by `level`.
     :param lines: List of strings or a single string. A single string is splt up into individual lines.
     :param level: number of spaces to indent
@@ -91,8 +93,7 @@ def indent(lines: Union[str, list[str]], level: int = 4) -> str:
     prefix = " " * level
     if lines:
         return prefix + f"\n{prefix}".join(lines)
-    else:
-        return ""
+    return ""
 
 
 def get_docstring(sections: Mapping[str, list[str]]) -> list[str]:
@@ -199,18 +200,17 @@ class {class_name}(DockerBaseRunner):
         res = isort.code(
             res, config=isort.Config(settings_path=project_root().as_posix())
         )
-    except ISortError as exc:
-        logger.exception(exc)
+    except ISortError:
+        logger.exception("Error sorting imports for %s", cmd)
     try:
         return black.format_str(res, mode=black.Mode())
-    except Exception as exc:
-        logger.exception(exc)
+    except Exception:
+        logger.exception("Error formatting code for %s", cmd)
         return res
 
 
 def write_class(cmd: str = "") -> None:
-    """
-    Generate a class for `cmd` and write it to `file_name`
+    """Generate a class for `cmd` and write it to `file_name`.
 
     :param cmd: docker-compose command to create or an empty string for root.
     :param file_name: Name of output file (empty/None for auto-generation)
