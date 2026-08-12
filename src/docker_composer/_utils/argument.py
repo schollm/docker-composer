@@ -1,9 +1,9 @@
 """Helper modules to parse docker compoose --help arguments"""
 
 from __future__ import annotations
-from typing import Iterable, Iterator
 
 import logging
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class Argument:
         return self.type_desc == OPTION
 
     @staticmethod
-    def from_line(line: str) -> "Argument":
+    def from_line(line: str) -> Argument:
         if "  " in line:
             return _from_line_has_sep(line)
         raise ValueError(line)
@@ -80,8 +80,7 @@ def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:
 
 
 def parse_dc_argument(lines: list[str]) -> list[Argument]:
-    """
-    Parse arguments from lines of docker-compose specifications
+    """Parse arguments from lines of docker-compose specifications
     :param lines: Lines of the Options sections from `docker-compose --help`.
     :return: List of arguments
     """
@@ -90,7 +89,7 @@ def parse_dc_argument(lines: list[str]) -> list[Argument]:
 
 
 def _get_type(type_name) -> type:
-    res = _TYPE_CONVERSIONS.get(type_name, None)
+    res = _TYPE_CONVERSIONS.get(type_name)
     if res is None:
         if "=" in type_name:
             res = dict
@@ -108,12 +107,11 @@ def _parse_arg(arg: str) -> tuple[str, str, bool]:
     if has_more:
         arg = arg[:-1]
         default = ""
+    elif "=" in arg:
+        default = arg[arg.index("=") + 1 :]
+        arg = arg[: arg.index("=")]
     else:
-        if "=" in arg:
-            default = arg[arg.index("=") + 1 :]
-            arg = arg[: arg.index("=")]
-        else:
-            default = ""
+        default = ""
     return arg.replace("-", "_").strip(), default, has_more
 
 
@@ -121,17 +119,15 @@ def _get_type_name_from_default(default: str) -> str:
     """Extract type name from default value"""
     if not default:
         return OPTION
-    elif default == "index":
+    if default == "index":
         return "int"
-    elif default == "proto":
+    if default == "proto":
         return "str"
-    else:
-        raise NotImplementedError(default)
+    raise NotImplementedError(default)
 
 
-def _from_line_has_sep(line) -> "Argument":
-    """
-    Get the argument from a docker-compose Options line, assuming there are at least two spaces before the description
+def _from_line_has_sep(line) -> Argument:
+    """Get the argument from a docker-compose Options line, assuming there are at least two spaces before the description
     Sample " -f, --foo=[] FILES   Foo of files"
 
     :param line: a single line with the description separated from the definition by at least two blanks

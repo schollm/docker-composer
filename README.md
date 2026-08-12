@@ -40,8 +40,8 @@ process = base.ps(all=True).call(capture_output=True)
 print(process.stdout.encode("UTF-8"))
 #          Name                      Command           State    Ports
 # -------------------------------------------------------------------
-# myapp_app_70fd8b786b76   myapp --start-server        Exit 0        
-# myapp_app_6ac3db4e1b55   myapp --client              Exit 0   
+# myapp_app_70fd8b786b76   myapp --start-server        Exit 0
+# myapp_app_6ac3db4e1b55   myapp --client              Exit 0
 ```
 
 ## Develop
